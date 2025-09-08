@@ -2,6 +2,8 @@ package com.rnk.generics;
 
 import com.rnk.generics.filter.CustomerFilter;
 import com.rnk.generics.filter.Specification;
+import com.rnk.refactoring_optimisation.util.CustomLogger;
+import com.rnk.refactoring_optimisation.util.CustomLoggerImpl;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import com.rnk.generics.exceptions.*;
 public class InMemoryRepositoryTest {
     private Repository<Integer, String> repository;
     private Repository<Integer, Customer> customerRepository;
-    private static final Logger logger = Logger.getLogger(InMemoryRepository.class.getName());
+    private static final CustomLogger logger = new CustomLoggerImpl(Logger.getLogger(InMemoryRepository.class.getName()));
     private Specification montrealSpec;
 
     @BeforeEach

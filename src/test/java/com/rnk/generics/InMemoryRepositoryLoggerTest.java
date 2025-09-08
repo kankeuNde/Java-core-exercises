@@ -1,6 +1,7 @@
 package com.rnk.generics;
 
 import com.rnk.generics.exceptions.EntityNotFoundException;
+import com.rnk.refactoring_optimisation.util.CustomLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class InMemoryRepositoryLoggerTest {
-    private Logger mockLogger;
+    private CustomLogger mockLogger;
     private InMemoryRepository<Integer, String> repository;
 
     @BeforeEach
     public void setUp() {
-        mockLogger = mock(Logger.class);
+        mockLogger = mock(CustomLogger.class);
         repository = new InMemoryRepository<>(mockLogger);
     }
 
@@ -33,7 +34,7 @@ public class InMemoryRepositoryLoggerTest {
         verify(mockLogger, atLeastOnce()).info(contains("Deleted entity"));
         // Try deleting non-existing to trigger warning
         assertThrows(EntityNotFoundException.class, () -> repository.deleteById(99));
-        verify(mockLogger, atLeastOnce()).warning(contains("Cannot delete"));
+        verify(mockLogger, atLeastOnce()).warn(contains("Cannot delete"));
     }
 
     @Test
