@@ -1,48 +1,42 @@
 package com.rnk.design_patterns.singleton;
 
-import org.junit.jupiter.api.AfterEach;
+import com.rnk.design_patterns.singleton.formatter.Formatter;
+import com.rnk.design_patterns.singleton.formatter.JsonFormatter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoggerTest {
 
-    private  final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
+    //private final static Formatter formatter = new PlainTextFormatter();
+    private final static Formatter formatter = new JsonFormatter();
+    private final static LogLevel level = LogLevel.INFO;
+
 
     private Logger logger;
     private static Logger logger1;
 
     @BeforeAll
     public static void globalSetup(){
-        logger1 = Logger.getInstance();
+        logger1 = Logger.getInstance(level, formatter);
     }
 
     @BeforeEach
     public void setUp(){
-        logger = Logger.getInstance();
-        // Redirect system.out to outContent to capture output
-        System.setOut(new PrintStream(outContent));
-    }
-
-    @AfterEach
-    public void restoreStreams(){
-        // Restore original System.out after test
-        System.setOut(originalOut);
+        logger = Logger.getInstance(level, formatter);
     }
 
     @Test
     public void testgetInstanceLogger_should_return_same_object(){
         int id = logger.hashCode();
-        logger = logger.getInstance();
+        logger = logger.getInstance(level, formatter);
         int id2 = logger.hashCode();
         assertEquals(id, id2);
     }
@@ -57,7 +51,7 @@ public class LoggerTest {
             final int index = i;
             new Thread(
                     () -> {
-                        instances[index] = Logger.getInstance();
+                        instances[index] = Logger.getInstance(level, formatter);
                         latch.countDown();
                     }
             ).start();
@@ -74,31 +68,42 @@ public class LoggerTest {
 
     @Test
     public void testLog_shouldContainTheLoggedMessage(){
-        Logger logger = Logger.getInstance();
+        Logger logger = Logger.getInstance(level, formatter);
         String message = "Test message";
+        String regex = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}";
+        Pattern pattern = Pattern.compile(regex);
 
-        logger.log(message);
-        String output = outContent.toString().trim();
-
+        String output = logger.log(message);
+        Matcher matcher = pattern.matcher(output);
         // Check output contains the message
         assertTrue(output.contains(message), "Log output should contain the original message");
-        // Check output contains a timestamp-like pattern (ISO-INSTANT format)
-        assertTrue(output.matches("^\\d{4}-\\d{2}-\\d{2}T.*"), "Log output should start with a timestamp");
+        // Check output contains a timestamp-like pattern
+        assertTrue(matcher.find());
     }
 
     @Test
     public void testReflectionAttackPrevention_ThrowsException() throws Exception {
-        Logger instance1 = Logger.getInstance();
-        Constructor<Logger> constructor = Logger.class.getDeclaredConstructor();
+        Logger instance1 = Logger.getInstance(level, formatter);
+        Constructor<Logger> constructor = Logger.class.getDeclaredConstructor(LogLevel.class, Formatter.class);
         constructor.setAccessible(true); // bypass private constructor
 
         //The second creation attempt via reflection should throw IllegalStateException
         InvocationTargetException thrown = assertThrows(InvocationTargetException.class, () -> {
-            constructor.newInstance();
+            constructor.newInstance(level, formatter);
         });
 
         //Assert that the real cause is IllegalStateException
         Throwable cause = thrown.getCause();
         assert(cause instanceof IllegalStateException);
     }
+
+    @Test
+    public void testSetFormatterOrLoggerLevelWithNullLogger_ShouldReturnException(){
+        Logger logger = null;
+        assertThrows(NullPointerException.class, ()->{
+            logger.setLoggerLevel(LogLevel.INFO);
+        });
+    }
+
+
 }
