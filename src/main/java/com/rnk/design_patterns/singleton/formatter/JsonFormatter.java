@@ -6,9 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rnk.design_patterns.singleton.LogLevel;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 public class JsonFormatter implements Formatter{
 
+
+
+    private String string;
     @Override
     public String format(LogLevel level, String message, Instant timeStamp) {
         ObjectMapper mapper = new ObjectMapper();
@@ -21,6 +25,8 @@ public class JsonFormatter implements Formatter{
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        var var = 12;
         return json;
+
     }
 }

@@ -20,6 +20,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.20.1")
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1")
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation("org.postgresql:postgresql:42.7.8")
 }
 
 tasks.test {
