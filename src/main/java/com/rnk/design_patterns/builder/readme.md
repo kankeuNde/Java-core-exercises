@@ -1,125 +1,127 @@
-Voici une synthèse pour vous aider à élaborer deux exercices progressifs autour du **Pattern Builder** en Java, intégrant les bonnes pratiques professionnelles, TDD, SOLID et conception modulaire, avec une analogie concrète pour la compréhension.
+Here are the translations of the previous two exercises on the Builder Pattern in Java, rendered in English as requested, following the structure and style compatible with README.md format:
 
 ***
 
-## Contexte et analogie réelle
+## Context and Real-Life Analogy
 
-Imaginons que vous souhaitez construire une **voiture**. La voiture peut avoir différentes configurations : moteur électrique ou thermique, sièges en cuir ou en tissu, équipement premium ou standard. Le constructeur ne veut pas écrire une logique complexe pour gérer toutes ces configurations dans un seul constructeur.
+Imagine you want to build a **car**. The car can have different configurations: electric or combustion engine, leather or fabric seats, premium or standard equipment. The manufacturer does not want to write complicated logic for all these configurations in a single constructor.
 
-Le **Builder Pattern** permet alors de construire la voiture étape par étape, selon la configuration désirée, tout en rendant le code flexible et modulaire. Cela ressemble à une usine de voitures où chaque étape (installation du moteur, des sièges, etc.) est séparée, et l'usine peut produire différents modèles selon la demande, sans changer le processus global.
+The **Builder Pattern** allows you to construct the car step-by-step according to the desired configuration, making the code flexible and modular. It is like a car factory where each step (installing engine, seats, etc.) is separated, and the factory can produce different models without changing the overall process.
 
 ***
 
-## Exercice 1 : Construire un ordinateur personnalisé
-### Contexte métier
+## Exercise 1: Building a Customized Computer
 
-Une entreprise de configuration d’ordinateurs veut permettre à ses clients de créer leur PC sur-mesure, avec options pour CPU, RAM, stockage, GPU, etc. L’objectif est de rendre cette configuration flexible et facilement extensible.
+### Business Context
 
-### Objectifs techniques
+A computer configuration company wants to allow customers to create their custom PCs with options for CPU, RAM, storage, GPU, etc. The goal is to make this configuration flexible and easily extensible.
 
-- Implémenter un **Pattern Builder** pour construire un objet `Computer`.
-- Créer un **Builder Fluent** pour simplifier la syntaxe.
-- Respecter SOLID en séparant les responsabilités.
-- Rédiger des tests JUnit pour valider chaque étape.
-- Gérer les erreurs (ex. configuration non supportée).
+### Technical Goals
 
-### Cahier des charges
+- Implement the **Builder Pattern** to build a `Computer` object.
+- Use a **Fluent Builder** to simplify syntax.
+- Respect SOLID principles by separating responsibilities.
+- Write JUnit tests to validate each step.
+- Handle errors (e.g., unsupported configurations).
 
-| Classes (extraits) | Rôle / Responsabilités | Attributs | Méthodes | Signature (ex) |
-|------------|------------------------|------------|--------------|----------------|
-| `Computer` | Produit final | cpu, ram, storage, gpu | displayInfo() | `public void displayInfo()` |
-| `Builder` | Interface abstraite | — | buildCPU(), buildRAM(), buildStorage(), buildGPU(), getResult() | `public interface Builder { ... } }` |
-| `ConcreteBuilder` (ex : `GamingComputerBuilder`) | Implémentation concrète | même attributs que `Computer` | Méthodes build plus spécifiques | `public class GamingComputerBuilder implements Builder` |
-| `Director` | Coordination | — | construct(Builder) | `public class ComputerDirector { ... } }` |
-| Tests unitaires : vérifient configuration complète | ... | — | ... | Exemple : `testGamingComputer()` |
+### Specification
 
-### Conseils et bonnes pratiques
+| Classes (excerpt)               | Role / Responsibility                   | Attributes                   | Methods                    | Example Signature                                |
+|--------------------------------|---------------------------------------|------------------------------|----------------------------|-------------------------------------------------|
+| `Computer`                     | Final product                         | cpu, ram, storage, gpu        | displayInfo()              | `public void displayInfo()`                      |
+| `Builder`                     | Abstract builder interface            | —                            | buildCPU(), buildRAM(), buildStorage(), buildGPU(), getResult() | `public interface Builder { ... }`              |
+| `ConcreteBuilder` (e.g., `GamingComputerBuilder`) | Concrete implementation              | same attributes as Computer  | Specific build methods    | `public class GamingComputerBuilder implements Builder` |
+| `Director`                   | Orchestrates build steps               | —                            | construct(Builder)         | `public class ComputerDirector { ... }`         |
+| Unit Tests                   | Verify complete configuration          | —                            | —                          | e.g., `testGamingComputer()`                     |
 
-- Définir une interface `Builder` claire.
-- La classe `Computer` doit être **immutable** ou configurée uniquement via le builder.
-- Créer un `Director` pour orchestrer la construction dans un ordre précis.
-- Rédiger d’abord les tests (TDD), puis implémenter.
-- Gérer les exceptions si, par exemple, une configuration non supportée est demandée.
+### Tips and Best Practices
 
-### Cas tests (JUnit)
+- Define a clear `Builder` interface.
+- The `Computer` class should be immutable or only configured via the builder.
+- Create a `Director` to control the construction order.
+- Write tests first (TDD).
+- Handle exceptions if unsupported configuration is requested.
 
-- Construire un PC Gamer avec GPU, 16GB RAM, SSD, vérifier la configuration.
-- Vérifier la gestion d’une erreur si une configuration invalide est demandée.
-- Vérifier que la méthode `displayInfo()` affiche la configuration correcte.
+### JUnit Test Cases
 
-### Instructions Git
+- Build a gaming PC with GPU, 16GB RAM, SSD, verify configuration correctness.
+- Verify error handling when invalid configuration is requested.
+- Confirm `displayInfo()` prints correct configuration details.
+
+### Git Instructions
 
 ```shell
 git checkout -b builder-exercise1
 ```
 
-Puis, à chaque étape : `git add .` et `git commit -m "..."`.
+Commit often with `git add .` and `git commit -m "..."`.
 
 ***
 
-## Exercice 2 : Construction de robots modularisés pour l’industrie
+## Exercise 2: Modular Industrial Robot Construction
 
-### Contexte métier
+### Business Context
 
-Une usine de robots configurable veut assembler différents robots (soldiers, assistants, drones) avec des composants configurables : capteurs, armes, batteries, etc. Chaque robot a une configuration différente, mais le processus de construction est semblable.
+A robotics factory wants to assemble different types of robots (soldier, assistant, drone) with configurable components: sensors, weapons, batteries, etc. Each robot type has its own configuration, but the build process is similar.
 
-### Objectifs techniques
+### Technical Goals
 
-- Implémenter un **Builder** pour différents types de robots.
-- La construction doit être modulaire, extensible pour nouveaux types.
-- Respect du principe SRP pour chaque composant.
-- Tests TDD pour chaque étape de construction.
-- Intégration d’un gestionnaire d’erreurs et logs.
+- Implement a **Builder** for different robot types.
+- Construction must be modular and extensible.
+- Each component respects the SRP.
+- TDD tests for each build step.
+- Include error handling and logging.
 
-### Cahier des charges
+### Specification
 
-| Classes (extraits) | Rôle / Responsabilités | Attributs | Méthodes | Signature (ex) |
-|------------------|------------------------|------------|-------------|----------------|
-| `Robot` | Produit final | composants : capteurs, armes, batteries | displayComponents() | `public void displayComponents()` |
-| `RobotBuilder` | Interface de construction | — | buildSensors(), buildWeapons(), buildPower(), getRobot() | `public interface RobotBuilder { ... } }` |
-| `SoldierRobotBuilder`, `DroidRobotBuilder` | Implémentations spécifiques | mêmes attributs que `Robot` | build spécifiques | `public class SoldierRobotBuilder implements RobotBuilder` |
-| `RobotDirector` | Orchestration | — | construct(RobotBuilder) | `public class RobotDirector { ... } }` |
-| Tests : vérifient composants corrects | ... | — | ... | Exemple : `testSoldierRobot()` |
+| Classes (excerpt)               | Role / Responsibility                   | Attributes                   | Methods                    | Signature Example                               |
+|--------------------------------|---------------------------------------|------------------------------|----------------------------|------------------------------------------------|
+| `Robot`                        | Final product                         | components: sensors, weapons, power | displayComponents()        | `public void displayComponents()`               |
+| `RobotBuilder`                | Construction interface                 | —                            | buildSensors(), buildWeapons(), buildPower(), getRobot() | `public interface RobotBuilder { ... }`         |
+| `SoldierRobotBuilder`, `DroidRobotBuilder` | Concrete builders                    | same as Robot attributes     | Specific build methods    | `public class SoldierRobotBuilder implements RobotBuilder` |
+| `RobotDirector`               | Director                              | —                            | construct(RobotBuilder)    | `public class RobotDirector { ... }`             |
+| Unit Tests                   | Verify robot components                | —                            | —                          | e.g., `testSoldierRobot()`                       |
 
-### Conseil et meilleures pratiques
+### Tips and Best Practices
 
-- Utiliser les interfaces pour anticiper l’extension.
-- Vérifier la gestion des erreurs via exceptions spécifiques.
-- Rédiger des tests couvrant chaque étape, en simulant des erreurs.
-- Se concentrer sur la cohesion, éviter la duplication.
+- Use interfaces to anticipate extension.
+- Check error handling with specific exceptions.
+- Cover each build step with unit tests, including error simulation.
+- Maintain cohesion and avoid duplication.
 
-### Cas tests (JUnit)
+### JUnit Test Cases
 
-- Construire un robot soldat et vérifie l’intégralité de la configuration.
-- Tester la gestion d’un composant défectueux (ex : batterie corrompue).
-- Vérifier que la méthode `displayComponents()` affiche la configuration.
+- Build a soldier robot and verify full configuration.
+- Test handling a defective component (e.g., corrupted battery).
+- Check `displayComponents()` shows proper details.
 
-### Instructions Git
+### Git Instructions
 
 ```shell
 git checkout -b builder-exercise2
 ```
 
-Pareillement, `git add` et `git commit` après chaque étape.
+Commit regularly after changes.
 
 ***
 
 ## Conclusion
 
-Ces deux exercices introduisent et approfondissent le Pattern Builder : comment construire des objets complexes étape par étape, en respectant SOLID, TDD, modularité, gestion d’erreur et extensibilité.[1][2][5]
+These two exercises introduce and deepen understanding of the Builder Pattern: how to build complex objects step-by-step while respecting SOLID, TDD, modularity, error management, and extensibility.[4][9][10]
 
-L’approche progressive permet de maîtriser des concepts fondamentaux tout en préparant l’intégration dans des projets industriels robustes et évolutifs.
+The progressive approach ensures mastery of fundamental concepts, preparing you for robust, scalable industrial projects.
 
 ***
 
-Si vous souhaitez, je peux fournir des exemples de code skeletons, interfaces, ou plus de détails pour chaque étape.
+If desired, detailed code skeletons, interfaces, or method contracts can be provided for each step.
 
-[1](https://refactoring.guru/design-patterns/builder/java/example)
-[2](https://dzone.com/articles/design-patterns-builder)
-[3](https://www.geeksforgeeks.org/system-design/builder-design-pattern/)
-[4](https://stackoverflow.com/questions/328496/when-would-you-use-the-builder-pattern)
-[5](https://www.baeldung.com/java-builder-pattern)
-[6](https://refactoring.guru/design-patterns/builder)
-[7](https://javatechonline.com/builder-design-pattern-in-java-guide-examples/)
-[8](https://dev.to/zeeshanali0704/builder-design-pattern-in-java-a-complete-guide-2l41)
-[9](https://www.youtube.com/watch?v=iyEeXMgSPdY)
+[1](https://stackoverflow.com/questions/23169505/java-best-way-to-implement-builder-pattern)
+[2](https://www.javacodegeeks.com/2013/01/the-builder-pattern-in-practice.html)
+[3](https://refactoring.guru/design-patterns/builder)
+[4](https://refactoring.guru/design-patterns/builder/java/example)
+[5](https://blog.stackademic.com/what-is-the-builder-pattern-in-java-and-how-does-it-benefit-your-code-07e2675048b9)
+[6](https://mkyong.com/design-pattern/java-builder-design-pattern-example/)
+[7](https://www.digitalocean.com/community/tutorials/builder-design-pattern-in-java)
+[8](https://developer.vonage.com/en/blog/builder-pattern-with-inheritance-in-java)
+[9](https://www.baeldung.com/java-builder-pattern)
+[10](https://dzone.com/articles/design-patterns-builder)
