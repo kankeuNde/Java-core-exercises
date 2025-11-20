@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rnk.design_patterns.singleton.LogLevel;
 
 import java.time.Instant;
-import java.util.ArrayList;
 
 public class JsonFormatter implements Formatter{
 
