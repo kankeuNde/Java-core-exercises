@@ -3,6 +3,7 @@ package com.rnk.algorithms;
 import com.rnk.streams.Employee;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Interview_MS_Round2 {
     public static void main(String[] args) {
@@ -53,7 +54,7 @@ public class Interview_MS_Round2 {
                         .sorted(
                         Comparator.comparing(
                                         (Employee e) -> e.getId())
-                                .reversed()).toList();
+                                .reversed()).collect(Collectors.toList());
         return sortedEmployees;
     }
 

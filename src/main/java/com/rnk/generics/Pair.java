@@ -61,7 +61,8 @@ public class Pair<K, V>{
     @Override
     public boolean equals(Object obj){
         if(this == obj) return true;
-        if(!(obj instanceof Pair<?, ?> pair)) return false;
+        if(!(obj instanceof Pair<?, ?>)) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) obj;
         //Pair pair = (Pair) obj;
         return Objects.equals(key, pair.getKey()) && Objects.equals(value, pair.getValue());
     }
